@@ -168,7 +168,7 @@ def main(args):
 
     torch.manual_seed(args.seed)
     device = torch.device('cuda' if args.cuda else 'cpu')
-    train_loader, test_loader = create_loaders(args, root='../data')
+    train_loader, test_loader, _, _ = create_loaders(args, root='../data')
     eps = args.epsilon
 
     # if src_models is not None, we train on adversarial examples that come

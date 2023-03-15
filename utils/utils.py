@@ -144,12 +144,13 @@ def create_loaders(args, augment=True, normalize=None, root='./data', num_test_s
         # Normalize image for MNIST
         # normalize = Normalize(mean=(0.1307,), std=(0.3081,))
         normalize = None
-        if args.split is None:
+        num_test_samples = vars(args).get('num_test_samples')
+        if vars(args).get('split') is None:
             trainloader, testloader = load_mnist(args, augment=False,
-                    root=root, num_test_samples=args.num_test_samples)
+                    root=root, num_test_samples=num_test_samples)
         else:
             trainloader, testloader, s_train_loader, s_test_loader = load_mnist(args, augment=False,
-                    root=root, num_test_samples=args.num_test_samples,
+                    root=root, num_test_samples=num_test_samples,
                     split=split)
         args.classes = 10
         args.input_size = 784
