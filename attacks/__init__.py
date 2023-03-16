@@ -86,45 +86,44 @@ def data_and_model_setup(args, di_attack=False, no_box_attack=False):
             adv_model_names = args.adv_models or []
             adv_models = [None] * len(adv_model_names)
 
-            ### ***********
-            for i in range(len(adv_model_names)):
-                type = get_model_type(adv_model_names[i])
-                # load from ensemble_adv_trained dir
-                adv_models[i] = load_model(args, adv_model_names[i], type=type).to(args.dev)
-
-            args.ens_adv_models = adv_models[:]
-            ### ***********
-
-            # args.ens_adv_models = []
-            # path = os.path.join(args.dir_test_models, "pretrained_classifiers",
-            #                     args.dataset, "ensemble_adv_trained",
-            #                     args.adv_models[0])
             all_paths = []
 
-            # Reset Type to model type
-            # if os.path.exists(path):
-            #     list_dir = os.listdir(path)
-            #     if len(list_dir) > 0:
-            #         num_test_model = len(list_dir)
-            #     for i in range(num_test_model):
-            #         filename = os.path.join(path, list_dir[i])
-            #         all_paths.append(filename)
-
-            # if di_attack:
-            #     path = os.path.join(args.dir_test_models,
-            #                         "pretrained_classifiers", args.dataset,
-            #                         "natural")
-            #     list_dir = os.listdir(path)
-            #     random.shuffle(list_dir)
-            #     filename = os.path.join(path, list_dir[0])
-            #     model = Net(args.nc, args.h, args.w).to(args.dev)
-            #     model.load_state_dict(torch.load(filename))
             if no_box_attack:
+                for i in range(len(adv_model_names)):
+                    type = get_model_type(adv_model_names[i])
+                    # load from ensemble_adv_trained dir
+                    adv_models[i] = load_model(args, adv_model_names[i], type=type).to(args.dev)
+
+                args.ens_adv_models = adv_models
                 args.type = get_model_type(args.model_name)
                 model = load_model(args, args.model_name, type=args.type)
             else:
-                args.type = get_model_type(args.model)
-                model = load_model(args, args.model, type=args.type)
+                path = os.path.join(args.dir_test_models, "pretrained_classifiers",
+                    args.dataset, "ensemble_adv_trained",
+                    args.adv_models[0])
+                if os.path.exists(path):
+                    list_dir = os.listdir(path)
+                    if len(list_dir) > 0:
+                        num_test_model = len(list_dir)
+                    for i in range(num_test_model):
+                        filename = os.path.join(path, list_dir[i])
+                        all_paths.append(filename)
+
+                path = os.path.join(args.dir_test_models, "pretrained_classifiers",
+                    args.dataset, "ensemble_adv_trained",
+                    args.adv_models[0])
+                if di_attack:
+                    path = os.path.join(args.dir_test_models,
+                                        "pretrained_classifiers", args.dataset,
+                                        "natural")
+                    list_dir = os.listdir(path)
+                    random.shuffle(list_dir)
+                    filename = os.path.join(path, list_dir[0])
+                    model = Net(args.nc, args.h, args.w).to(args.dev)
+                    model.load_state_dict(torch.load(filename))
+                else:
+                    args.type = get_model_type(args.model)
+                    model = load_model(args, args.model, type=args.type)
 
             l_test_classif_paths = all_paths
             model_type = 'Ensemble Adversarial'
