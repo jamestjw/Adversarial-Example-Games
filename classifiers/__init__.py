@@ -108,13 +108,12 @@ def load_all_classifiers(args, load_archs=None, split=0, load_train=True):
             list_dir = os.listdir(path)
             if len(list_dir) > 0:
                 num_test_model = len(list_dir)
-            for i in range(num_test_model):
-                if args.split is None:
-                    filename = os.path.join(path, list_dir[i])
-                else:
-                    filename = os.path.join(path, 'split_' + str(i) +
-                    '/model_0.pt')
-                all_paths.append(filename)
+                for i in range(num_test_model):
+                    if args.split is None:
+                        filename = os.path.join(path, list_dir[i])
+                    else:
+                        filename = os.path.join(path, f'split_{i}/model_0.pt')
+                    all_paths.append(filename)
         else:
             warnings.warn(f"WARNING: Couldn't load any pretrained classifiers, {path} doesn't exists or is empty.")
 

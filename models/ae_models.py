@@ -4,7 +4,6 @@ from torch import nn, optim
 import torch.nn.functional as F
 from torch.autograd import Variable
 from torch.distributions.multivariate_normal import MultivariateNormal
-import ipdb
 from torch.distributions import Normal
 
 

@@ -2,7 +2,6 @@ from advertorch.attacks import Attack
 import torch
 from tqdm import tqdm
 from torch import optim
-import ipdb
 import sys
 from __init__ import data_and_model_setup, load_data
 from __init__ import eval as eval_attacker
@@ -95,7 +94,7 @@ class NoBoxAttack(Attack):
             adv_inputs = self.G(x)
             kl_div = torch.Tensor([0]).to(self.args.dev).item()
             if anneal_eps is not None and anneal_eps > 1. :
-                raise("epsilon annealing not supported")
+                raise Exception("epsilon annealing not supported")
         elif self.args.model in ['CondGen', 'Resnet']:
             epsilon = self.args.epsilon
             if anneal_eps is not None:
@@ -176,6 +175,7 @@ class NoBoxAttack(Attack):
                                        opt_step=False)
                 clean_pred = self.predict(x.detach())
                 clean_out = clean_pred.max(1, keepdim=True)[1]  # get the index of the max log-probability
+                target_clean = target
                 cat_pred = torch.cat((clean_pred, adv_pred), 0)
                 cat_target = torch.cat((target, target), 0)
             else:
@@ -384,10 +384,10 @@ class NoBoxAttack(Attack):
                             loss_model, loss_perturb, loss_gen, train_loader)
 
             print(f'\nTrain: Epoch:{epoch} Loss: {loss_model:.4f}, Gen Loss :{loss_gen:.4f}, '
-                  f'Missclassify Loss :{loss_misclassify:.4f} '
-                  f'Clean. Acc: {clean_correct}/{num_clean} '
-                  f'({100. * clean_correct.cpu().numpy()/num_clean:.0f}%) '
-                  f'Perturb Loss {loss_perturb:.4f} Adv. Acc: {adv_correct}/{len(loader.dataset)} '
+                  f'Missclassify Loss :{loss_misclassify:.4f} \n'
+                  f'Clean. Acc: {clean_correct}/{num_clean} \n'
+                  f'({100. * clean_correct.cpu().numpy()/num_clean:.0f}%) \n'
+                  f'Perturb Loss {loss_perturb:.4f} Adv. Acc: {adv_correct}/{len(loader.dataset)} \n'
                   f'({100. * adv_correct.cpu().numpy()/len(loader.dataset):.0f}%)\n')
 
             if (epoch + 1) % args.eval_freq == 0:

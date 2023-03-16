@@ -34,10 +34,10 @@ def create_generator(arg_parse: argparse.Namespace, model_type: str,
             G = nn.DataParallel(G)
     elif dataset_type =='cifar':
         if model_type == 'DC_GAN':
-            raise("DC GAN not for CIFAR")
-            G = ResnetGenerator(arg_parse.dev, input_nc=3, output_nc=3,
-                                epsilon=arg_parse.epsilon,
-                                norm=arg_parse.attack_ball).to(arg_parse.dev)
+            raise Exception("DC GAN not for CIFAR")
+#             G = ResnetGenerator(arg_parse.dev, input_nc=3, output_nc=3,
+                                # epsilon=arg_parse.epsilon,
+#                                 norm=arg_parse.attack_ball).to(arg_parse.dev)
         elif model_type == 'CondGen':
             G = ConvGenerator(3,Bottleneck, [6,12,24,16], deterministic, *args,
                               **kwargs, norm=arg_parse.attack_ball).to(arg_parse.dev)
