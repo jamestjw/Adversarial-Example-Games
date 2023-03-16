@@ -308,6 +308,7 @@ class NoBoxAttack(Attack):
         pick_prob = self.pick_prob_start
         ''' Training Phase '''
         best_acc = 100
+        best_fool_rate = 0.
         for epoch in range(0, args.attack_epochs):
             adv_correct = 0
             clean_correct = 0
@@ -396,6 +397,7 @@ class NoBoxAttack(Attack):
                         mean_acc, std_acc, all_acc = eval.eval(args, self,
                                 test_loader, l_test_classif_paths,
                                 logger=self.logger, epoch=epoch)
+                        fool_rate = 100. - mean_acc
                 else:
                     if args.target_arch is not None:
                         model_type = args.target_arch
@@ -406,11 +408,11 @@ class NoBoxAttack(Attack):
 
                     eval_helpers = [self.predict, model_type, adv_models, l_test_classif_paths, test_loader]
 
-                    mean_acc = eval_attacker(args, self, "AEG", eval_helpers, args.num_eval_samples)
+                    fool_rate = eval_attacker(args, self, "AEG", eval_helpers, args.num_eval_samples)
                     # eval_fn(list(l_train_classif.values())[0])
 
-                if mean_acc < best_acc:
-                    best_acc = mean_acc
+                if fool_rate > best_fool_rate:
+                    best_fool_rate = fool_rate
                     try:
                         torch.save({"model": self.G.state_dict(), "args": args}, filename)
                     except:
