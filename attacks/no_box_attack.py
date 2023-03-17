@@ -384,11 +384,12 @@ class NoBoxAttack(Attack):
                             adv_correct, clean_correct, loss_misclassify,
                             loss_model, loss_perturb, loss_gen, train_loader)
 
-            print(f'\nTrain: Epoch:{epoch} Loss: {loss_model:.4f}, Gen Loss :{loss_gen:.4f}, '
+            print(f'\nTrain: Epoch:{epoch}\n'
+                  f'Loss: {loss_model:.4f}, Gen Loss :{loss_gen:.4f}, '
                   f'Missclassify Loss :{loss_misclassify:.4f} \n'
-                  f'Clean. Acc: {clean_correct}/{num_clean} \n'
+                  f'Clean. Acc: {clean_correct}/{num_clean} '
                   f'({100. * clean_correct.cpu().numpy()/num_clean:.0f}%) \n'
-                  f'Perturb Loss {loss_perturb:.4f} Adv. Acc: {adv_correct}/{len(loader.dataset)} \n'
+                  f'Perturb Loss {loss_perturb:.4f} Adv. Acc: {adv_correct}/{len(loader.dataset)} '
                   f'({100. * adv_correct.cpu().numpy()/len(loader.dataset):.0f}%)\n')
 
             if (epoch + 1) % args.eval_freq == 0:
@@ -415,6 +416,7 @@ class NoBoxAttack(Attack):
                     best_fool_rate = fool_rate
                     try:
                         torch.save({"model": self.G.state_dict(), "args": args}, filename)
+                        print(f"Saved model to {filename}")
                     except:
                         print("Warning: Failed to save model !")
 
