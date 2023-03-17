@@ -18,7 +18,7 @@ python ensemble_adver_train_mnist.py --model modelD_ens --adv_models modelA mode
 Trying to train a single model without ensemble, passing in `source_arch = ens_adv` is weird, but after examining the code this seems to do what I want it to do. Model name is the name of the critic, and model is the generator architecture.
 ```bash
 # In the attacks directory
-python no_box_attack.py --dataset mnist --namestr="A Mnist eps=0.3 Extragradient PGD-Critic=False" --perturb_loss Linf --epsilon=0.3 --attack_ball Linf --batch_size 1024 --test_batch_size 64 --attack_epochs 50 --extragradient --lr 1e-3 --lr_model 1e-3 --max_iter 20 --attack_loss cross_entropy --model CondGen --num_test_samples 256 --command train --source_arch ens_adv --model_name modelA --type 0 --eval_freq 1 --transfer --lambda_on_clean 1 --save_model "modelA" --dir_test_models ../ --adv_models modelA modelB modelC modelD  --wandb
+python no_box_attack.py --dataset mnist --namestr="A Mnist eps=0.3 Extragradient PGD-Critic=False Lambda=10" --perturb_loss Linf --epsilon=0.3 --attack_ball Linf --batch_size 1024 --test_batch_size 64 --attack_epochs 150 --extragradient --lr 1e-3 --lr_model 1e-3 --max_iter 20 --attack_loss cross_entropy --model CondGen --num_test_samples 256 --command train --source_arch ens_adv --model_name modelA --type 0 --eval_freq 2 --transfer --lambda_on_clean 10 --save_model "modelA" --dir_test_models ../ --adv_models modelA modelB modelC modelD  --wandb
 ```
 
 # Notes

@@ -276,12 +276,7 @@ class NoBoxAttack(Attack):
         args = self.args
         pgd_adversary = None
 
-        if args.save_model is None:
-            filename = 'saved_models/generator.pt'
-        else:
-            filename = os.path.join(args.save_model, 'generator.pt')
-
-        dirname = os.path.dirname(filename)
+        dirname = args.save_model or 'saved_models'
         if not os.path.exists(dirname):
             os.makedirs(dirname)
 
@@ -415,8 +410,9 @@ class NoBoxAttack(Attack):
                 if fool_rate > best_fool_rate:
                     best_fool_rate = fool_rate
                     try:
-                        torch.save({"model": self.G.state_dict(), "args": args}, filename)
-                        print(f"Saved model to {filename}")
+                        save_to = save_model_name(dirname)
+                        torch.save({"model": self.G.state_dict(), "args": args}, save_to)
+                        print(f"Saved model to {save_to}")
                     except:
                         print("Warning: Failed to save model !")
 
@@ -682,6 +678,10 @@ def main():
         attacker.train(train_loader, test_loader, adv_models,
                 l_test_classif_paths, l_train_classif={"source_model": model},
                 eval_fn=eval_fn)
+
+def save_model_name(dirname):
+    num_saved = len(os.listdir(dirname))
+    return os.path.join(dirname, f"generator-{num_saved}.pt")
 
 if __name__ == '__main__':
     main()
