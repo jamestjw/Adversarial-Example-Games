@@ -89,10 +89,12 @@ def data_and_model_setup(args, di_attack=False, no_box_attack=False):
             all_paths = []
 
             if no_box_attack:
-                for i in range(len(adv_model_names)):
-                    type = get_model_type(adv_model_names[i])
+                for i, adv_model_name in enumerate(adv_model_names):
+                    type = get_model_type(adv_model_name)
                     # load from ensemble_adv_trained dir
-                    adv_models[i] = load_model(args, adv_model_names[i], type=type).to(args.dev)
+                    adv_models[i] = load_model(args, adv_model_name, type=type).to(args.dev)
+                    all_paths.append(os.path.join(args.dir_test_models, "pretrained_classifiers",
+                                                  args.dataset, "ensemble_adv_trained", adv_model_name + '.pt'))
 
                 args.ens_adv_models = adv_models
                 args.type = get_model_type(args.model_name)
@@ -109,9 +111,6 @@ def data_and_model_setup(args, di_attack=False, no_box_attack=False):
                         filename = os.path.join(path, list_dir[i])
                         all_paths.append(filename)
 
-                path = os.path.join(args.dir_test_models, "pretrained_classifiers",
-                    args.dataset, "ensemble_adv_trained",
-                    args.adv_models[0])
                 if di_attack:
                     path = os.path.join(args.dir_test_models,
                                         "pretrained_classifiers", args.dataset,

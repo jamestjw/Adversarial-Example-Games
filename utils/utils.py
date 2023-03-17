@@ -227,8 +227,8 @@ def load_unk_model(args, filename=None, madry_model=False, name="VGG16"):
         elif (filename is None) and (args.attack_type == 'nobox') or  (args.source_arch == 'ens_adv'):
             print('Loading generic classifier')
             if args.source_arch == 'ens_adv' or args.ensemble_adv_trained:
-                model = model_mnist(type=args.type)
-                # model = load_model(args, args.model_name, type=args.type)
+                # model = model_mnist(type=args.type)
+                model = load_model(args, args.model_name, type=args.type)
             else:
                 model = MadryLeNet(args.nc, args.h, args.w).to(args.dev)
 

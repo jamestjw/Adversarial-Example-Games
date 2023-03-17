@@ -636,7 +636,7 @@ def main():
                          np.random.randint(len(test_loader.dataset), size=(num_samples,)))
         eval_loader = torch.utils.data.DataLoader(eval_loader, batch_size=args.test_batch_size)
         baseline_transfer(args, None, "Clean", model_type, eval_loader,
-            list_classifiers=l_test_classif_paths)
+            list_classifiers=l_test_classif_paths, loaded_classifiers=adv_models)
 
     def eval_fn(model):
         advcorrect = 0
