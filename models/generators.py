@@ -438,7 +438,7 @@ class MnistGenerator(nn.Module):
     def forward(self, x, epsilon, target=None):
         h = self.encoder(x)
         h = torch.cat((h.view(-1,32*2*2),epsilon.repeat(x.shape[0],1)),1)
-        logits = self.fc(h.view(-1,32*2*2+1))
+        logits = self.fc(h.view(-1,32*2*2+1)) # This view is unnecessary?
         one_hot = self.sample(logits)
         z = self.fc_z(one_hot)
         if target is not None:
@@ -480,7 +480,54 @@ class MnistGenerator(nn.Module):
         self.encoder.load_state_dict(torch.load(fn_enc))
         self.decoder.load_state_dict(torch.load(fn_dec))
 
+class MnistGeneratorClamp(MnistGenerator):
+    def forward(self, x, epsilon, target=None):
+        h = self.encoder(x)
+        h = torch.cat((h.view(-1,32*2*2),epsilon.repeat(x.shape[0],1)),1)
+        logits = self.fc(h.view(-1,32*2*2+1)) # This view is unnecessary?
+        one_hot = self.sample(logits)
+        z = self.fc_z(one_hot)
+        if target is not None:
+            target_onehot = torch.zeros(target.size() + (10,)).cuda()
+            target_onehot.scatter_(1, target.detach().unsqueeze(1), 1)
+            z += self.fc_input(target_onehot)
+        z = F.relu(z)
+        h = torch.cat((h,z),1).view(-1,64,2,2)
+        # delta = self.decoder(h).view(-1,self.img_dim)
+        out = .5*(self.decoder(h) + 1.)
+        delta = out - x
+        if self.norm == "Linf":
+            delta = torch.clamp(delta, -1 * epsilon.item(), epsilon.item())
+        elif self.norm == "L2":
+            norm = torch.norm(delta, dim=1).view(-1,1).repeat(1,self.img_dim)
+            mask_norm = norm > self.epsilon
+            delta = ~mask_norm * delta + self.epsilon * delta * mask_norm / norm
+        else:
+            NotImplementedError(f"Generator architecture not implemented for norm: {self.norm}" )
+        output = x + delta
+        return output , entropy(logits)
 
+class MnistGeneratorDirectDelta(MnistGenerator):
+    def forward(self, x, epsilon, target=None):
+        h = self.encoder(x)
+        h = torch.cat((h.view(-1,32*2*2),epsilon.repeat(x.shape[0],1)),1)
+        logits = self.fc(h.view(-1,32*2*2+1)) # This view is unnecessary?
+        one_hot = self.sample(logits)
+        z = self.fc_z(one_hot)
+        if target is not None:
+            target_onehot = torch.zeros(target.size() + (10,)).cuda()
+            target_onehot.scatter_(1, target.detach().unsqueeze(1), 1)
+            z += self.fc_input(target_onehot)
+        z = F.relu(z)
+        h = torch.cat((h,z),1).view(-1,64,2,2)
+        # delta = self.decoder(h).view(-1,self.img_dim)
+        delta = self.decoder(h)
+        if self.norm == "Linf":
+            delta = delta * epsilon.item()
+        else:
+            NotImplementedError(f"Generator architecture not implemented for norm: {self.norm}" )
+        output = x + delta
+        return output , entropy(logits)
 
 class ResnetGenerator(nn.Module):
     """Resnet-based generator that consists of Resnet blocks between a few downsampling/upsampling operations.

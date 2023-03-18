@@ -1,7 +1,7 @@
 from typing import Any
 import argparse
 from .ae_models import MnistVAE, CifarVAE, Mnistautoencoder
-from .generators import Bottleneck, Generator, ConvGenerator, DCGAN, Cond_DCGAN, MnistGenerator, ResnetGenerator
+from .generators import Bottleneck, Generator, ConvGenerator, DCGAN, Cond_DCGAN, MnistGenerator, ResnetGenerator, MnistGeneratorClamp, MnistGeneratorDirectDelta
 from torch import nn
 from .dcgan28 import DiscriminatorCNN28, GeneratorCNN28
 
@@ -29,6 +29,10 @@ def create_generator(arg_parse: argparse.Namespace, model_type: str,
                                img_dim=784).to(arg_parse.dev)
         elif model_type == 'CondGen':
             G = MnistGenerator(norm=arg_parse.attack_ball).to(arg_parse.dev)
+        elif model_type == 'MnistGeneratorClamp':
+            G = MnistGeneratorClamp(norm=arg_parse.attack_ball).to(arg_parse.dev)
+        elif model_type == 'MnistGeneratorDirectDelta':
+            G = MnistGeneratorDirectDelta(norm=arg_parse.attack_ball).to(arg_parse.dev)
         else:
             G = Generator(input_size=784).to(arg_parse.dev)
             G = nn.DataParallel(G)

@@ -364,7 +364,7 @@ class NoBoxAttack(Attack):
                 adv_out = adv_pred.max(1, keepdim=True)[1]
 
                 # Optim step for the classifier
-                loss_model, clean_out, target_clean = self.critic_update(args, epoch, train_loader,
+                loss_model, clean_out, target_clean = self.critic_update(args, epoch, loader,
                                                            batch_idx, x,
                                                            target, adv_pred,
                                                            model_opt,
@@ -377,7 +377,7 @@ class NoBoxAttack(Attack):
             if args.wandb:
                 nobox_wandb(args, epoch, x, target, adv_inputs, adv_out,
                             adv_correct, clean_correct, loss_misclassify,
-                            loss_model, loss_perturb, loss_gen, train_loader)
+                            loss_model, loss_perturb, loss_gen, loader)
 
             print(f'\nTrain: Epoch:{epoch}\n'
                   f'Loss: {loss_model:.4f}, Gen Loss :{loss_gen:.4f}, '
