@@ -156,7 +156,7 @@ def load_test_classifiers(args, archs):
 
     print(f'\nLoading test paths: {test_paths}\n')
 
-    return test_paths
+    return sorted(test_paths)
 
 def load_one_classifier(args, load_archs=None):
     train_classifiers = {}
