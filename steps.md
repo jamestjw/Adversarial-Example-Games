@@ -6,6 +6,12 @@ python ensemble_adver_train_mnist.py --model modelB --type=1 --namestr=""
 python ensemble_adver_train_mnist.py --model modelC --type=2 --namestr=""
 python ensemble_adver_train_mnist.py --model modelD --type=3 --namestr=""
 
+python ensemble_adver_train_mnist.py --model modelA_adv --type=0 --namestr="" --train_adv --adv_models &&
+python ensemble_adver_train_mnist.py --model modelB_adv --type=1 --namestr="" --train_adv --adv_models &&
+python ensemble_adver_train_mnist.py --model modelC_adv --type=2 --namestr="" --train_adv --adv_models &&
+python ensemble_adver_train_mnist.py --model modelD_adv --type=3 --namestr="" --train_adv --adv_models
+
+
 python ensemble_adver_train_mnist.py --model modelA_ens --adv_models modelD modelC modelB --type=0 --epochs=12 --train_adv --namestr=""
 python ensemble_adver_train_mnist.py --model modelB_ens --adv_models modelA modelC modelD --type=1 --epochs=12 --train_adv --namestr=""
 python ensemble_adver_train_mnist.py --model modelC_ens --adv_models modelA modelD modelB --type=2 --epochs=12 --train_adv --namestr=""

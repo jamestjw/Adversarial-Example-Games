@@ -154,9 +154,11 @@ def load_test_classifiers(args, archs):
         else:
             warnings.warn(f"WARNING: Couldn't load any pretrained classifiers, {path} doesn't exists or is empty.")
 
+    test_paths = sorted(test_paths)
+
     print(f'\nLoading test paths: {test_paths}\n')
 
-    return sorted(test_paths)
+    return test_paths
 
 def load_one_classifier(args, load_archs=None):
     train_classifiers = {}

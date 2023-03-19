@@ -399,8 +399,10 @@ class NoBoxAttack(Attack):
                         model_type = args.target_arch
                     elif args.source_arch == "adv" or (args.source_arch == "ens_adv" and args.dataset == "mnist"):
                         model_type =  [args.model_type]
-                    else:
+                    elif args.adv_models and len(args.adv_models) > 0:
                         model_type = [args.adv_models[0]]
+                    else:
+                        model_type = []
 
                     eval_helpers = [self.predict, model_type, adv_models, l_test_classif_paths, test_loader]
 
