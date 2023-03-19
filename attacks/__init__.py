@@ -98,7 +98,8 @@ def data_and_model_setup(args, di_attack=False, no_box_attack=False):
 
                 args.ens_adv_models = adv_models
                 args.type = get_model_type(args.model_name)
-                model = load_model(args, args.model_name, type=args.type)
+                # model = load_model(args, args.model_name, type=args.type)
+                model = model_mnist(type=args.type) # For the critic, we should load an empty model
             else:
                 path = os.path.join(args.dir_test_models, "pretrained_classifiers",
                     args.dataset, "ensemble_adv_trained",
