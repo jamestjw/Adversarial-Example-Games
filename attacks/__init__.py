@@ -8,7 +8,7 @@ from attacks.autopgd_pt import APGDAttack
 from attacks.fab_pt import FABAttack
 from attacks.square_pt import SquareAttack
 from attacks.autopgd_pt import APGDAttack_targeted
-from classifiers import load_all_classifiers, load_list_classifiers, load_dict_classifiers
+from classifiers import load_all_classifiers, load_list_classifiers, load_dict_classifiers, load_test_classifiers
 from cnn_models import LeNet as Net
 from cnn_models import ResNet18
 from cnn_models.mnist_ensemble_adv_train_models import *
@@ -131,6 +131,11 @@ def data_and_model_setup(args, di_attack=False, no_box_attack=False):
             # print("Adv Models will be loaded at Test time")
             # print("Transferring attack to the following models")
             # print(*all_paths, sep = "\n")
+        else:
+            l_test_classif_paths = load_test_classifiers(args, ["ensemble_adv_trained"])
+            model = model_mnist(type=args.type) # For the critic, we should load an empty model
+            model_type = "natural2"
+            adv_models = None
     return model, adv_models, l_test_classif_paths, model_type
 
 def load_data(args, test_loader):

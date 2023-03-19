@@ -608,7 +608,8 @@ def main():
     x_test, y_test = load_data(args, test_loader)
 
     if args.dataset == "mnist":
-        critic = load_unk_model(args)
+        # critic = load_unk_model(args)
+        critic = model
     elif args.dataset == "cifar":
         name = args.source_arch
         if args.source_arch == "adv":

@@ -133,6 +133,31 @@ def load_all_classifiers(args, load_archs=None, split=0, load_train=True):
 
     return train_classifiers, test_paths
 
+def load_test_classifiers(args, archs):
+    test_paths = []
+    for model_type in archs:
+        if args.split is None:
+            path = os.path.join(args.dir_test_models, "pretrained_classifiers", args.dataset, model_type)
+        else:
+            path = os.path.join(args.dir_test_models, "split_classifiers",
+                    args.dataset, model_type)
+        if os.path.exists(path):
+            list_dir = os.listdir(path)
+            if len(list_dir) > 0:
+                num_test_model = len(list_dir)
+                for i in range(num_test_model):
+                    if args.split is None:
+                        filename = os.path.join(path, list_dir[i])
+                    else:
+                        filename = os.path.join(path, f'split_{i}/model_0.pt')
+                    test_paths.append(filename)
+        else:
+            warnings.warn(f"WARNING: Couldn't load any pretrained classifiers, {path} doesn't exists or is empty.")
+
+    print(f'\nLoading test paths: {test_paths}\n')
+
+    return test_paths
+
 def load_one_classifier(args, load_archs=None):
     train_classifiers = {}
     all_paths = []

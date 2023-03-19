@@ -36,6 +36,10 @@ python no_box_attack.py --dataset mnist --namestr="D Mnist eps=0.3 Extragradient
 
 # Alternate Generator
 python no_box_attack.py --dataset mnist --namestr="A Mnist eps=0.3 Extragradient PGD-Critic=True Lambda=10 Training-set=test Gen=clamp" --perturb_loss Linf --epsilon=0.3 --attack_ball Linf --batch_size 1024 --test_batch_size 64 --attack_epochs 150 --extragradient --lr 1e-3 --lr_model 1e-3 --max_iter 20 --attack_loss cross_entropy --model MnistGeneratorClamp --command train --source_arch ens_adv --model_name modelA --type 0 --eval_freq 2 --transfer --lambda_on_clean 10 --save_model "modelA-pgd-critic-test-clamp" --dir_test_models ../ --adv_models modelA modelB modelC modelD modelA_ens modelB_ens modelC_ens modelD_ens --wandb --pgd_on_critic --train_set test
+
+
+# Fixed natural training
+python no_box_attack.py --dataset mnist --namestr="A Mnist eps=0.3 Extragradient PGD-Critic=True Lambda=10 Training-set=test Gen=normal Non-ensemble" --perturb_loss Linf --epsilon=0.3 --attack_ball Linf --batch_size 1024 --test_batch_size 64 --attack_epochs 150 --extragradient --lr 1e-3 --lr_model 1e-3 --max_iter 20 --attack_loss cross_entropy --model CondGen --command train --source_arch natural2 --model_name modelA --type 0 --eval_freq 2 --transfer --lambda_on_clean 10 --save_model "modelA-pgd-critic-test-natural-normal-gen" --dir_test_models ../ --pgd_on_critic --train_set test
 ```
 
 # Notes

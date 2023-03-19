@@ -8,6 +8,8 @@ import numpy as np
 from utils.utils import load_unk_model, create_loaders, kwargs_perturb_loss, save_image_to_wandb
 import glob
 from cnn_models.mnist_ensemble_adv_train_models import load_model
+from defenses.ensemble_adver_train_mnist import get_model_type
+from pathlib import Path
 
 def eval(args, attacker, test_loader=None, list_classifiers=[], logger=None, epoch=0):
     if test_loader is None:
@@ -55,10 +57,15 @@ def baseline_transfer(args, attacker, attack_name, model_type, adv_img_list,
     if len(list_classifiers) == 0:
         list_classifiers = glob.glob(os.path.join(args.dir_test_models, "pretrained_classifiers", args.dataset, model_type, "model_*.pt"))
 
+    print(f"Test Classifiers: {list_classifiers}")
+
     for i, test_classif_path in enumerate(list_classifiers):
         if loaded_classifiers is None:
             if model_type == 'Ensemble Adversarial':
                 classifier = load_model(args, type=args.type, filename=test_classif_path).to(args.dev)
+            elif 'natural' in model_type:
+                t = get_model_type(Path(test_classif_path).stem)
+                classifier = load_model(args, type=t, filename=test_classif_path).to(args.dev)
             else:
                 classifier = load_unk_model(args, test_classif_path, name=model_type)
         else:
