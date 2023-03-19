@@ -95,7 +95,7 @@ class NoBoxAttack(Attack):
             kl_div = torch.Tensor([0]).to(self.args.dev).item()
             if anneal_eps is not None and anneal_eps > 1. :
                 raise Exception("epsilon annealing not supported")
-        elif self.args.model in ['CondGen', 'Resnet']:
+        elif self.args.model in ['CondGen', 'Resnet'] or 'MnistGenerator' in self.args.model:
             epsilon = self.args.epsilon
             if anneal_eps is not None:
                 epsilon *= anneal_eps
