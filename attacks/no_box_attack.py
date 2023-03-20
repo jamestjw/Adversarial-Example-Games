@@ -423,6 +423,19 @@ class NoBoxAttack(Attack):
 
         return adv_out, adv_inputs
 
+    def eval_test_loader(self, test_loader, l_test_classif_paths):
+        # TODO: Do we need this nonsense?
+        if args.target_arch is not None:
+            model_type = args.target_arch
+        elif args.source_arch == "adv" or (args.source_arch == "ens_adv" and args.dataset == "mnist"):
+            model_type =  [args.model_type]
+        elif args.adv_models and len(args.adv_models) > 0:
+            model_type = [args.adv_models[0]]
+        else:
+            model_type = []
+        eval_helpers = [self.predict, model_type, [], l_test_classif_paths, test_loader]
+        _fool_rate = eval_attacker(args, self, "AEG", eval_helpers, args.num_eval_samples)
+
 
 def main():
 
@@ -682,6 +695,7 @@ def main():
 
     if args.command == "eval":
         attacker.load(args)
+        attacker.eval_test_loader(test_loader, l_test_classif_paths)
     elif args.command == "train":
         attacker.train(train_loader, test_loader, adv_models,
                 l_test_classif_paths, l_train_classif={"source_model": model},
