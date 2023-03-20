@@ -7,6 +7,7 @@ from utils.utils import load_unk_model, ARCHITECTURES
 DEFAULT_LIST_CLASSIFIERS = ["pretrained_classifiers", "madry_challenge_models"]
 import numpy as np
 import ipdb
+import re
 sys.path.append("..")  # Adds higher directory to python modules path.
 from cnn_models.mnist_ensemble_adv_train_models import *
 
@@ -146,6 +147,8 @@ def load_test_classifiers(args, archs):
             if len(list_dir) > 0:
                 num_test_model = len(list_dir)
                 for i in range(num_test_model):
+                    if args.filter_test_regex:
+                        if not re.match(args.filter_test_regex, list_dir[i]): continue
                     if args.split is None:
                         filename = os.path.join(path, list_dir[i])
                     else:

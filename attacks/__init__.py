@@ -16,6 +16,7 @@ from defenses.ensemble_adver_train_mnist import *
 from eval import baseline_transfer, baseline_eval_classifier
 import numpy as np
 import torch
+from pathlib import Path
 
 def load_attacker(args):
     raise NotImplementedError

@@ -281,6 +281,7 @@ class NoBoxAttack(Attack):
             os.makedirs(dirname)
         else:
             shutil.rmtree(dirname)
+            os.makedirs(dirname)
 
         gen_opt = optim.Adam(self.G.parameters(), lr=args.lr,
                              betas=(args.momentum, .99))
@@ -577,6 +578,8 @@ def main():
     parser.add_argument('--split', type=int, default=None,
                         help="Which subsplit to use.")
     parser.add_argument('--path_to_data', default="../data", type=str)
+    parser.add_argument("--filter_test_regex", type=str, default=None,
+                        help="Regex to filter test models")
     args = parser.parse_args()
 
     args.dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
