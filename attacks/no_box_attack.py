@@ -78,7 +78,8 @@ class NoBoxAttack(Attack):
         if args.save_model is None:
             filename = f'saved_models/generator.pt'
         else:
-            filename = os.path.join(args.save_model, f'generator.pt')
+            # filename = os.path.join(args.save_model, f'generator.pt')
+            filename = last_saved_model_name(args.save_mode)
 
         checkpoint = torch.load(filename)
         if "args" in checkpoint:
@@ -705,6 +706,10 @@ def main():
 def save_model_name(dirname):
     num_saved = len(os.listdir(dirname))
     return os.path.join(dirname, f"generator-{num_saved}.pt")
+
+def last_saved_model_name(dirname):
+    num_saved = len(os.listdir(dirname))
+    return os.path.join(dirname, f"generator-{num_saved-1}.pt")
 
 if __name__ == '__main__':
     main()
