@@ -280,8 +280,9 @@ class NoBoxAttack(Attack):
         if not os.path.exists(dirname):
             os.makedirs(dirname)
         else:
-            shutil.rmtree(dirname)
-            os.makedirs(dirname)
+            if args.command == 'train':
+                shutil.rmtree(dirname)
+                os.makedirs(dirname)
 
         gen_opt = optim.Adam(self.G.parameters(), lr=args.lr,
                              betas=(args.momentum, .99))
