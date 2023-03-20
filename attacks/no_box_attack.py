@@ -79,7 +79,7 @@ class NoBoxAttack(Attack):
             filename = f'saved_models/generator.pt'
         else:
             # filename = os.path.join(args.save_model, f'generator.pt')
-            filename = last_saved_model_name(args.save_mode)
+            filename = last_saved_model_name(args.save_model)
 
         checkpoint = torch.load(filename)
         if "args" in checkpoint:
@@ -425,7 +425,7 @@ class NoBoxAttack(Attack):
 
         return adv_out, adv_inputs
 
-    def eval_test_loader(self, test_loader, l_test_classif_paths):
+    def eval_test_loader(self, args, test_loader, l_test_classif_paths):
         # TODO: Do we need this nonsense?
         if args.target_arch is not None:
             model_type = args.target_arch
@@ -435,7 +435,7 @@ class NoBoxAttack(Attack):
             model_type = [args.adv_models[0]]
         else:
             model_type = []
-        eval_helpers = [self.predict, model_type, [], l_test_classif_paths, test_loader]
+        eval_helpers = [self.predict, model_type, None, l_test_classif_paths, test_loader]
         _fool_rate = eval_attacker(args, self, "AEG", eval_helpers, args.num_eval_samples)
 
 
@@ -697,7 +697,7 @@ def main():
 
     if args.command == "eval":
         attacker.load(args)
-        attacker.eval_test_loader(test_loader, l_test_classif_paths)
+        attacker.eval_test_loader(args, test_loader, l_test_classif_paths)
     elif args.command == "train":
         attacker.train(train_loader, test_loader, adv_models,
                 l_test_classif_paths, l_train_classif={"source_model": model},
