@@ -9,7 +9,7 @@ import wandb
 import torch
 from torch import autograd
 from torch.distributions.bernoulli import Bernoulli
-import os
+import os, shutil
 from advertorch.attacks import LinfPGDAttack
 import argparse
 from advertorch.context import ctx_noparamgrad_and_eval
@@ -279,6 +279,8 @@ class NoBoxAttack(Attack):
         dirname = args.save_model or 'saved_models'
         if not os.path.exists(dirname):
             os.makedirs(dirname)
+        else:
+            shutil.rmtree(dirname)
 
         gen_opt = optim.Adam(self.G.parameters(), lr=args.lr,
                              betas=(args.momentum, .99))
