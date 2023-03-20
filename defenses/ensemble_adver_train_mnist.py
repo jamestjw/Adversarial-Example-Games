@@ -249,8 +249,6 @@ if __name__ == '__main__':
                         help='add the test set in the training set')
     parser.add_argument('--attack_ball', type=str, default="Linf",
                         choices= ['L2','Linf'])
-    parser.add_argument('--architecture', default="VGG16",
-                        help="The architecture we want to attack on CIFAR.")
     parser.add_argument('--dir_test_models', type=str, default="../",
                         help="The path to the directory containing the classifier models for evaluation.")
     parser.add_argument('--epsilon', type=float, default=0.1, metavar='M',
