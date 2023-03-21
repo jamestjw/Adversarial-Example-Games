@@ -582,11 +582,12 @@ def load_mnist(args, augment=True, root='./data', num_test_samples=None, split=N
         train_set, test_set = dataset["train"], dataset["test"]
 
     if num_test_samples is not None:
-        generator = None
+        generator = torch.random.manual_seed(args.seed or 1234) if args.fixed_testset else None
         indices = torch.randint(len(test_set), size=(num_test_samples,), generator=generator)
-        if args.fixed_testset is True:
-            generator = torch.random.manual_seed(1234)
-            indices = torch.arange(num_test_samples)
+        # if args.fixed_testset is True:
+        #     generator = torch.random.manual_seed(args.seed or 1234)
+        #     indices = torch.arange(num_test_samples)
+
         test_set = Subset(test_set, indices)
 
     # if args.train_set == 'test':

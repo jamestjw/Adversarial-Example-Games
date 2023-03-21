@@ -508,7 +508,7 @@ def main():
                         help='Max numbe of epochs to train G')
     parser.add_argument('--num_flows', type=int, default=2, metavar='N',
                         help='Number of Flows')
-    parser.add_argument('--seed', type=int, metavar='S',
+    parser.add_argument('--seed', type=int, metavar='S', default=None,
                         help='random seed (default: None)')
     parser.add_argument('--input_size', type=int, default=784, metavar='S',
                         help='Input size for MNIST is default')
